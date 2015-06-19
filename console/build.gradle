@@ -1,0 +1,16 @@
+version '2.4'
+[
+        'java',
+        'idea'
+].each({apply plugin: it})
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile libraries.cassandra,
+            libraries.cassandra_mapping,
+            libraries.commons_lang3,
+            libraries.log4j
+}
