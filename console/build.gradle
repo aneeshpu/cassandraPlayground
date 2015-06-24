@@ -1,12 +1,11 @@
 version '2.4'
-[
-        'java',
-        'idea'
-].each({apply plugin: it})
+['java', 'idea'].each({apply plugin: it})
 
 repositories {
     mavenCentral()
 }
+
+apply plugin: "com.github.johnrengelman.shadow"
 
 dependencies {
     compile libraries.cassandra,
@@ -14,4 +13,11 @@ dependencies {
             libraries.commons_lang3,
             libraries.log4j,
             libraries.lombok
+}
+
+
+jar {
+    manifest{
+        attributes("Main-class": "com.cassandraplayground.Program")
+    }
 }

@@ -9,14 +9,20 @@ import java.util.*;
 public class Program {
   public static void main(String[] args) {
 
-    saveNotification(randomNotification());
+    saveNotification(randomNotification("frys", "kroger").toArray(new Notification[randomNotification("frys").size()]));
 
     final CassandraConnection.SessionWrapper wrapper = new CassandraConnection.SessionWrapper();
 
     try {
-      final List<Notification> notifications = printNotifications("frys", wrapper);
 
-      notifications.forEach(notification -> System.out.println(notification));
+      final List<Notification> notifications = new ArrayList<>();
+
+      Arrays.asList("frys", "kroger").forEach(banner -> {
+        notifications.addAll(getNotifications(wrapper, banner));
+      });
+
+      notifications.forEach(System.out::println);
+
 
       final Optional<Notification> optional = notifications
           .stream()
@@ -29,7 +35,7 @@ public class Program {
         return;
       }
       final Notification notification = optional.get();
-      System.out.printf("============= Deleting %s ============", notification);
+      System.out.printf("============= Deleting %s ============", notification.getCorrelationId());
       wrapper.getMapper(Notification.class).delete(notification);
 
     } finally {
@@ -42,7 +48,7 @@ public class Program {
 
   }
 
-  private static Notification randomNotification() {
+  private static List<Notification> randomNotification(String... banners) {
 
     Map<String,String> message = new HashMap<>();
     message.put("foo", "bar");
@@ -53,15 +59,29 @@ public class Program {
     c.add(Calendar.DATE, 30);
     Date expiryDate = c.getTime();
 
-    return new Notification("frys", "expiring_coupon", "frys", UUID.randomUUID(), message, new Date(), expiryDate);
+    final List<Notification> notifications = new ArrayList<>();
+    for (String banner : banners) {
+
+      final Notification notification = new Notification(banner, "expiring_coupon", "frys", UUID.randomUUID(), message, new Date(), expiryDate);
+      notifications.add(notification);
+    }
+
+
+    return notifications;
+
   }
 
-  private static void saveNotification(Notification notification) {
-    new NotificationsRepository().saveNotification(notification);
-    System.out.println("========== com.cassandraplayground.blog.Notification Saved! =============");
+  private static void saveNotification(Notification... notifications) {
+    final NotificationsRepository notificationsRepository = new NotificationsRepository();
+
+    for (Notification notification : notifications) {
+      notificationsRepository.saveNotification(notification);
+    }
+
+    System.out.printf("========== Saved! %d notifications=============\n", notifications.length);
   }
 
-  private static List<Notification> printNotifications(String recipient, CassandraConnection.SessionWrapper wrapper) {
+  private static List<Notification> getNotifications(CassandraConnection.SessionWrapper wrapper, String recipient) {
 
     try {
 
