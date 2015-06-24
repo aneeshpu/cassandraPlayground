@@ -1,0 +1,10 @@
+CREATE TABLE notifications.notifications (
+    recipient_id text,
+    type text,
+    created_date timestamp,
+    banner text,
+    correlation_id uuid,
+    expiry_date timestamp,
+    message List<frozen<Map<text,text>>>,
+    PRIMARY KEY (recipient_id, type)
+)

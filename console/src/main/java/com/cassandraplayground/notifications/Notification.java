@@ -1,15 +1,13 @@
 package com.cassandraplayground.notifications;
 
-import com.datastax.driver.mapping.annotations.Column;
-import com.datastax.driver.mapping.annotations.PartitionKey;
-import com.datastax.driver.mapping.annotations.Table;
-import com.datastax.driver.mapping.annotations.Transient;
+import com.datastax.driver.mapping.annotations.*;
 import lombok.EqualsAndHashCode;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -51,11 +49,11 @@ public class Notification extends AbstractVO<Notification> {
     this.correlationId = correlationId;
   }
 
-  public Map getMessage() {
+  public List<Map<String, String>> getMessage() {
     return message;
   }
 
-  public void setMessage(Map message) {
+  public void setMessage(List<Map<String, String>> message) {
     this.message = message;
   }
 
@@ -87,7 +85,8 @@ public class Notification extends AbstractVO<Notification> {
   private UUID correlationId;
 
   @Column(name="message")
-  private Map<String,String> message;
+  @Frozen("list<frozen<Map<text,text>>>")
+  private List<Map<String,String>> message;
 
   @Column(name = "created_date")
   private Date createdDate;
@@ -99,7 +98,7 @@ public class Notification extends AbstractVO<Notification> {
 
   }
 
-  public Notification(String recipientId, String notificationType, String banner, UUID correlationId, Map message, Date createdDate, Date expiryDate){
+  public Notification(String recipientId, String notificationType, String banner, UUID correlationId, List<Map<String, String>> message, Date createdDate, Date expiryDate){
 
     this.recipientId = recipientId;
     this.notificationType = notificationType;
