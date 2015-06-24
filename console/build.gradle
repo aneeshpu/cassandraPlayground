@@ -12,5 +12,6 @@ dependencies {
     compile libraries.cassandra,
             libraries.cassandra_mapping,
             libraries.commons_lang3,
-            libraries.log4j
+            libraries.log4j,
+            libraries.lombok
 }
