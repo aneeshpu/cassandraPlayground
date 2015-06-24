@@ -14,10 +14,11 @@ public class Program {
 
       if (firstArg.equals("-c")) {
 
-        saveNotification(randomNotification("frys", "kroger").toArray(new Notification[randomNotification("frys").size()]));
+        final List<Notification> notifications = randomNotification(args[1]);
+        saveNotification(notifications.toArray(new Notification[notifications.size()]));
       } else if (firstArg.equals("-r")) {
 
-        printNotifications();
+        printNotifications(args[1]);
 
       } else if (firstArg.equals("-d")) {
         deleteNotification(args[1]);
@@ -30,12 +31,12 @@ public class Program {
 
   private static void deleteNotification(String banner) {
     final CassandraConnection.SessionWrapper wrapper = new CassandraConnection.SessionWrapper();
-    final List<Notification> notifications = getNotifications();
+    final List<Notification> notifications = getNotifications(banner);
     try {
 
       final Optional<Notification> optional = notifications
           .stream()
-          .filter(notification -> notification.getBanner().equals(banner))
+          .filter(notification -> notification.getRecipientId().equals(banner))
           .findFirst();
 
       if (!optional.isPresent()) {
@@ -54,18 +55,18 @@ public class Program {
     ;
   }
 
-  private static void printNotifications() {
-    final List<Notification> notifications = getNotifications();
+  private static void printNotifications(String... banners) {
+    final List<Notification> notifications = getNotifications(banners);
     notifications.forEach(System.out::println);
   }
 
-  private static List<Notification> getNotifications() {
+  private static List<Notification> getNotifications(String... banners) {
     final CassandraConnection.SessionWrapper wrapper = new CassandraConnection.SessionWrapper();
     final List<Notification> notifications;
     try {
       notifications = new ArrayList<>();
 
-      Arrays.asList("frys", "kroger").forEach(banner -> {
+      Arrays.asList(banners).forEach(banner -> {
         notifications.addAll(getNotifications(wrapper, banner));
       });
     } finally {
