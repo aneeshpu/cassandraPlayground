@@ -12,7 +12,8 @@ dependencies {
             libraries.cassandra_mapping,
             libraries.commons_lang3,
             libraries.log4j,
-            libraries.lombok
+            libraries.lombok,
+            libraries.jcommander
 }
 
 

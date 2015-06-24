@@ -9,48 +9,76 @@ import java.util.*;
 public class Program {
   public static void main(String[] args) {
 
-    saveNotification(randomNotification("frys", "kroger").toArray(new Notification[randomNotification("frys").size()]));
-
-    final CassandraConnection.SessionWrapper wrapper = new CassandraConnection.SessionWrapper();
-
     try {
+      final String firstArg = args[0];
 
-      final List<Notification> notifications = new ArrayList<>();
+      if (firstArg.equals("-c")) {
 
-      Arrays.asList("frys", "kroger").forEach(banner -> {
-        notifications.addAll(getNotifications(wrapper, banner));
-      });
+        saveNotification(randomNotification("frys", "kroger").toArray(new Notification[randomNotification("frys").size()]));
+      } else if (firstArg.equals("-r")) {
 
-      notifications.forEach(System.out::println);
+        printNotifications();
 
+      } else if (firstArg.equals("-d")) {
+        deleteNotification(args[1]);
+      }
+    } finally {
+      //hack to kill all threads
+      System.exit(0);
+    }
+  }
+
+  private static void deleteNotification(String banner) {
+    final CassandraConnection.SessionWrapper wrapper = new CassandraConnection.SessionWrapper();
+    final List<Notification> notifications = getNotifications();
+    try {
 
       final Optional<Notification> optional = notifications
           .stream()
-          .filter(notification -> notification.getBanner().equals("frys"))
+          .filter(notification -> notification.getBanner().equals(banner))
           .findFirst();
 
-      if(!optional.isPresent()){
+      if (!optional.isPresent()) {
 
-        System.out.println("Could not find a frys notification to delete");
+        System.out.printf("Could not find a %s notification to delete", banner);
         return;
       }
+
       final Notification notification = optional.get();
       System.out.printf("============= Deleting %s ============", notification.getCorrelationId());
       wrapper.getMapper(Notification.class).delete(notification);
 
     } finally {
       wrapper.close();
+    }
+    ;
+  }
 
-      //hack to kill all threads.
-      System.exit(0);
+  private static void printNotifications() {
+    final List<Notification> notifications = getNotifications();
+    notifications.forEach(System.out::println);
+  }
+
+  private static List<Notification> getNotifications() {
+    final CassandraConnection.SessionWrapper wrapper = new CassandraConnection.SessionWrapper();
+    final List<Notification> notifications;
+    try {
+      notifications = new ArrayList<>();
+
+      Arrays.asList("frys", "kroger").forEach(banner -> {
+        notifications.addAll(getNotifications(wrapper, banner));
+      });
+    } finally {
+      wrapper.close();
     }
 
 
+    return notifications;
   }
 
   private static List<Notification> randomNotification(String... banners) {
 
-    Map<String,String> message = new HashMap<>();
+    Map<String, String> message = new HashMap<>();
     message.put("foo", "bar");
     message.put("body", "Save your money!");
 
@@ -91,7 +119,6 @@ public class Program {
           .all();
 
       return notifications;
-
 
 
     } finally {
