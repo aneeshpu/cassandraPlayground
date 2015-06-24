@@ -1,3 +1,5 @@
+package com.cassandraplayground.notifications;
+
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.policies.ConstantReconnectionPolicy;
 import com.datastax.driver.core.policies.DCAwareRoundRobinPolicy;

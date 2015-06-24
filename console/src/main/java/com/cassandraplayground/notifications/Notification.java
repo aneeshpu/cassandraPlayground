@@ -1,3 +1,5 @@
+package com.cassandraplayground.notifications;
+
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
@@ -93,6 +95,10 @@ public class Notification extends AbstractVO<Notification> {
   @Transient
   private Date expiryDate;
 
+  public Notification(){
+
+  }
+
   public Notification(String recipientId, String notificationType, String banner, UUID correlationId, Map message, Date createdDate, Date expiryDate){
 
     this.recipientId = recipientId;
@@ -122,7 +128,7 @@ public class Notification extends AbstractVO<Notification> {
 
   @Override
   public String toString() {
-    return "Notification{" +
+    return "com.cassandraplayground.notifications.Notification{" +
         "recipientId='" + recipientId + '\'' +
         ", notificationType='" + notificationType + '\'' +
         ", banner='" + banner + '\'' +

@@ -1,10 +1,13 @@
-import java.util.List;
-import java.util.UUID;
+package com.cassandraplayground.blog;
 
+import com.cassandraplayground.notifications.Constants;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.google.common.base.Objects;
+
+import java.util.List;
+import java.util.UUID;
 
 @Table(keyspace = Constants.KEYSPACE, name = "comments")
 public class Comment extends AbstractVO<Comment>{

@@ -1,10 +1,13 @@
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+package com.cassandraplayground.blog;
 
+import com.cassandraplayground.notifications.Constants;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Table(keyspace = Constants.KEYSPACE, name = "posts")
 public class Post extends AbstractVO<Post> {
@@ -80,7 +83,7 @@ public class Post extends AbstractVO<Post> {
     // ---- ACCESSORS ----
 
     public static List<Post> getPosts(UUID blogId, UUID fromPost, int pageSize, CassandraConnection.SessionWrapper sessionWrapper){
-        AllQueries queries =  sessionWrapper.getAllQueries();
+        com.cassandraplayground.blog.AllQueries queries =  sessionWrapper.getAllQueries();
         if (fromPost != null){
             return queries.getPostsReverseChronologically(blogId, fromPost, pageSize).all();
         } else {

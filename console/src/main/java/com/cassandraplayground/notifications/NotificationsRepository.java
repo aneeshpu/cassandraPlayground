@@ -1,3 +1,6 @@
+package com.cassandraplayground.notifications;
+
+import com.cassandraplayground.blog.CassandraConnection;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
@@ -23,6 +26,7 @@ public class NotificationsRepository {
           .value("banner", notification.getBanner())
           .value("created_date", notification.getCreatedDate())
           .value("message", notification.getMessage())
+          .value("expiry_date", notification.getExpiryDate())
           .value("correlation_id", notification.getCorrelationId());
 
       session.execute(insertStatement.using(ttl(notification.lifetime())));

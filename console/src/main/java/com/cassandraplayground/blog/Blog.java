@@ -1,5 +1,6 @@
-import java.util.UUID;
+package com.cassandraplayground.blog;
 
+import com.cassandraplayground.notifications.Constants;
 import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
@@ -7,6 +8,8 @@ import com.datastax.driver.mapping.annotations.Table;
 import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.hash.Hashing;
+
+import java.util.UUID;
 
 @Table(keyspace = Constants.KEYSPACE, name = "blogs")
 public class Blog extends AbstractVO<Blog> {

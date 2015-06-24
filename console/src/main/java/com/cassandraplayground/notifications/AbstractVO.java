@@ -1,3 +1,5 @@
+package com.cassandraplayground.notifications;
+
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.Result;

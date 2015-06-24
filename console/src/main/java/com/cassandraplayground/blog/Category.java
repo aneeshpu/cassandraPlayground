@@ -1,12 +1,15 @@
-import java.util.UUID;
+package com.cassandraplayground.blog;
 
+import com.cassandraplayground.notifications.Constants;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.google.common.base.Objects;
 
+import java.util.UUID;
+
 @Table(keyspace = Constants.KEYSPACE, name = "categories")
-public class Category extends AbstractVO<Category>{
+public class Category extends AbstractVO<Category> {
     @PartitionKey
     @Column(name = "cat_name")
     private String categoryName;
