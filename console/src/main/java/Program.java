@@ -1,6 +1,4 @@
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Program {
   public static void main(String[] args) {
@@ -13,7 +11,7 @@ public class Program {
 
   private static Notification randomNotification() {
 
-    Map message = new HashMap<>();
+    Map<String,String> message = new HashMap<>();
     message.put("foo", "bar");
     message.put("body", "Save your money!");
 

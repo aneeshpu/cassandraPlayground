@@ -22,6 +22,7 @@ public class NotificationsRepository {
           .value("type", notification.getNotificationType())
           .value("banner", notification.getBanner())
           .value("created_date", notification.getCreatedDate())
+          .value("message", notification.getMessage())
           .value("correlation_id", notification.getCorrelationId());
 
       session.execute(insertStatement.using(ttl(notification.lifetime())));
